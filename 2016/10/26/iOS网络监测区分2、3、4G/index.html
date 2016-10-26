@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="扯淡," />
+  <meta name="keywords" content="iOS区分2、3、4G网络," />
 
 
 
@@ -84,28 +84,28 @@
 
 
 
-<meta name="description" content="闲来无事&amp;nbsp;来扯扯淡最近都有意无意听说 互联网这个行业 不行了  找不到工作了  死了一片  又一片
-我就在想  这关我什么事  现目前 我不创业  不投资   只要把 自己  手头上的事情做好   不就行了
-其他的事情  自然有其他的人担心   我干嘛要去操这个心呢  
-反过来又想想   不对啊  这个 好像跟我还是有关的 公司倒了  不是就没工作了 
-没工作  再找呗   大不了 去搬">
+<meta name="description" content="如果有在使用AFNetworking朋友知道，在AF里只能区分当前网络是WiFi网络还是蜂窝网络在3G、4G出现以后，我们就有一个新需求，需要区分2G、3G、4G网络了，虽然同为蜂窝网络但是速度可是千差万别，有时我们会感觉到4G比WiFi还快，当然流量也是跑的相当肉痛
+下面我们就来讲一讲怎么区分2G 3G 4G网络  
+下载Reachability首先我们需要下载苹果官方的一个示例工程 
+http">
 <meta property="og:type" content="article">
-<meta property="og:title" content="杂谈">
-<meta property="og:url" content="http://sheep.com/2016/10/19/杂谈/index.html">
+<meta property="og:title" content="iOS网络监测区分2、3、4G">
+<meta property="og:url" content="http://sheep.com/2016/10/26/iOS网络监测区分2、3、4G/index.html">
 <meta property="og:site_name" content="嘘_sheep">
-<meta property="og:description" content="闲来无事&amp;nbsp;来扯扯淡最近都有意无意听说 互联网这个行业 不行了  找不到工作了  死了一片  又一片
-我就在想  这关我什么事  现目前 我不创业  不投资   只要把 自己  手头上的事情做好   不就行了
-其他的事情  自然有其他的人担心   我干嘛要去操这个心呢  
-反过来又想想   不对啊  这个 好像跟我还是有关的 公司倒了  不是就没工作了 
-没工作  再找呗   大不了 去搬">
-<meta property="og:updated_time" content="2016-10-19T07:23:21.000Z">
+<meta property="og:description" content="如果有在使用AFNetworking朋友知道，在AF里只能区分当前网络是WiFi网络还是蜂窝网络在3G、4G出现以后，我们就有一个新需求，需要区分2G、3G、4G网络了，虽然同为蜂窝网络但是速度可是千差万别，有时我们会感觉到4G比WiFi还快，当然流量也是跑的相当肉痛
+下面我们就来讲一讲怎么区分2G 3G 4G网络  
+下载Reachability首先我们需要下载苹果官方的一个示例工程 
+http">
+<meta property="og:image" content="http://o8bxt3lx0.bkt.clouddn.com/Snip20161026_1.png">
+<meta property="og:image" content="http://o8bxt3lx0.bkt.clouddn.com/Snip20161026_2.png">
+<meta property="og:updated_time" content="2016-10-26T14:04:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="杂谈">
-<meta name="twitter:description" content="闲来无事&amp;nbsp;来扯扯淡最近都有意无意听说 互联网这个行业 不行了  找不到工作了  死了一片  又一片
-我就在想  这关我什么事  现目前 我不创业  不投资   只要把 自己  手头上的事情做好   不就行了
-其他的事情  自然有其他的人担心   我干嘛要去操这个心呢  
-反过来又想想   不对啊  这个 好像跟我还是有关的 公司倒了  不是就没工作了 
-没工作  再找呗   大不了 去搬">
+<meta name="twitter:title" content="iOS网络监测区分2、3、4G">
+<meta name="twitter:description" content="如果有在使用AFNetworking朋友知道，在AF里只能区分当前网络是WiFi网络还是蜂窝网络在3G、4G出现以后，我们就有一个新需求，需要区分2G、3G、4G网络了，虽然同为蜂窝网络但是速度可是千差万别，有时我们会感觉到4G比WiFi还快，当然流量也是跑的相当肉痛
+下面我们就来讲一讲怎么区分2G 3G 4G网络  
+下载Reachability首先我们需要下载苹果官方的一个示例工程 
+http">
+<meta name="twitter:image" content="http://o8bxt3lx0.bkt.clouddn.com/Snip20161026_1.png">
 
 
 
@@ -126,10 +126,10 @@
 
 
 
-  <link rel="canonical" href="http://sheep.com/2016/10/19/杂谈/"/>
+  <link rel="canonical" href="http://sheep.com/2016/10/26/iOS网络监测区分2、3、4G/"/>
 
 
-  <title> 杂谈 | 嘘_sheep </title>
+  <title> iOS网络监测区分2、3、4G | 嘘_sheep </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -269,7 +269,7 @@
             
             
               
-                杂谈
+                iOS网络监测区分2、3、4G
               
             
           </h1>
@@ -281,8 +281,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-19T15:14:51+08:00" content="2016-10-19">
-              2016-10-19
+            <time itemprop="dateCreated" datetime="2016-10-26T19:07:14+08:00" content="2016-10-26">
+              2016-10-26
             </time>
           </span>
 
@@ -295,8 +295,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/扯淡/" itemprop="url" rel="index">
-                    <span itemprop="name">扯淡</span>
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
                   </a>
                 </span>
 
@@ -311,8 +311,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/10/19/杂谈/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/19/杂谈/" itemprop="commentsCount"></span>
+                <a href="/2016/10/26/iOS网络监测区分2、3、4G/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/iOS网络监测区分2、3、4G/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -322,7 +322,7 @@
 
           
           
-             <span id="/2016/10/19/杂谈/" class="leancloud_visitors" data-flag-title="杂谈">
+             <span id="/2016/10/26/iOS网络监测区分2、3、4G/" class="leancloud_visitors" data-flag-title="iOS网络监测区分2、3、4G">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -344,13 +344,29 @@
       
 
       
-        <h3 id="闲来无事-nbsp-来扯扯淡"><a href="#闲来无事-nbsp-来扯扯淡" class="headerlink" title="闲来无事&nbsp;来扯扯淡"></a>闲来无事&nbsp;来扯扯淡</h3><p>最近都有意无意听说 互联网这个行业 不行了  找不到工作了  死了一片  又一片</p>
-<p>我就在想  这关我什么事  现目前 我不创业  不投资   只要把 自己  手头上的事情做好   不就行了</p>
-<p>其他的事情  自然有其他的人担心   我干嘛要去操这个心呢  </p>
-<p>反过来又想想   不对啊  这个 好像跟我还是有关的 公司倒了  不是就没工作了 </p>
-<p>没工作  再找呗   大不了 去搬砖</p>
-<h3 id="正经点"><a href="#正经点" class="headerlink" title="正经点"></a>正经点</h3><p><em>不过说现在这个行业不景气  倒是确实的，一波接着一波的公司倒闭</em></p>
-<p><em>但是我在想哈，也有很多企业在这一两年成长起来，壮大，滴滴就是一个很好的例子，所以呢，自己产品做得好，哪会管它什么环境，都是你去影响环境了  就轮不上环境来制约你了</em></p>
+        <p>如果有在使用AFNetworking朋友知道，在AF里只能区分当前网络是WiFi网络还是蜂窝网络在3G、4G出现以后，我们就有一个新需求，需要区分2G、3G、4G网络了，虽然同为蜂窝网络但是速度可是千差万别，有时我们会感觉到4G比WiFi还快，当然流量也是跑的相当肉痛</p>
+<p>下面我们就来讲一讲怎么区分2G 3G 4G网络  </p>
+<h3 id="下载Reachability"><a href="#下载Reachability" class="headerlink" title="下载Reachability"></a>下载Reachability</h3><p>首先我们需要下载苹果官方的一个示例工程 </p>
+<p><a href="https://developer.apple.com/library/content/samplecode/Reachability/Introduction/Intro.html" target="_blank" rel="external">https://developer.apple.com/library/content/samplecode/Reachability/Introduction/Intro.html</a></p>
+<p>在这个工程里有我们需要用到的 苹果官方提供的实时监测网络的类 我们是在这个基础上 稍作修改就可以做到</p>
+<p>进入网页 </p>
+<p><img src="http://o8bxt3lx0.bkt.clouddn.com/Snip20161026_1.png" alt="1"></p>
+<p>在示例代码中 将Reachability类拷贝到我们的项目当中</p>
+<p><img src="http://o8bxt3lx0.bkt.clouddn.com/Snip20161026_2.png" alt="2"></p>
+<h3 id="修改Reachability"><a href="#修改Reachability" class="headerlink" title="修改Reachability"></a>修改Reachability</h3><p>首先修改Reachability类中的网络类型枚举:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">typedef enum : NSInteger &#123;</div><div class="line">	NotReachable = 0,</div><div class="line">	ReachableViaWiFi,</div><div class="line">	ReachableViaWWAN,</div><div class="line">    kReachableVia2G,</div><div class="line">    kReachableVia3G,</div><div class="line">    kReachableVia4G</div><div class="line">&#125; NetworkStatus;</div></pre></td></tr></table></figure>
+<p>然后再.m文件中 找到方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (NetworkStatus)networkStatusForFlags:(SCNetworkReachabilityFlags)flags;</div></pre></td></tr></table></figure>
+<p>增加判断2G 3G 4G的方法<br>在 if ((flags &amp; kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN) 判断中加上代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">if ((flags &amp; kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN)</div><div class="line">	&#123;</div><div class="line">        returnValue = ReachableViaWWAN;</div><div class="line">        </div><div class="line">        CTTelephonyNetworkInfo *phonyNetwork = [[CTTelephonyNetworkInfo alloc] init];</div><div class="line">        NSString *currentStr = phonyNetwork.currentRadioAccessTechnology;</div><div class="line">        if (currentStr) &#123;</div><div class="line">            if ([currentStr isEqualToString:CTRadioAccessTechnologyLTE]) &#123;</div><div class="line">                return kReachableVia4G;</div><div class="line">            &#125;else if ([currentStr isEqualToString:CTRadioAccessTechnologyGPRS]|| [currentStr isEqualToString:CTRadioAccessTechnologyEdge])&#123;</div><div class="line">                return kReachableVia2G;</div><div class="line">            &#125;else&#123;</div><div class="line">                return kReachableVia3G;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if ((flags &amp; kSCNetworkReachabilityFlagsTransientConnection) == kSCNetworkReachabilityFlagsTransientConnection) &#123;</div><div class="line">            if((flags &amp; kSCNetworkReachabilityFlagsConnectionRequired) == kSCNetworkReachabilityFlagsConnectionRequired) &#123;</div><div class="line">                return kReachableVia2G;</div><div class="line">            &#125;</div><div class="line">            return kReachableVia3G;</div><div class="line">        &#125;</div><div class="line">        return ReachableViaWWAN;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>在需要用到的地方引入我们修改过后的Reachability</p>
+<h3 id="使用Reachability"><a href="#使用Reachability" class="headerlink" title="使用Reachability"></a>使用Reachability</h3><p>监听网络变化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">//添加网络监测</div><div class="line">    [[NSNotificationCenter defaultCenter] addObserver:self</div><div class="line">                                             selector:@selector(reachabilityChanged:)</div><div class="line">                                                 name: kReachabilityChangedNotification</div><div class="line">                                               object: nil];</div><div class="line">    </div><div class="line">    //开启网络监测</div><div class="line">    self.intertReach = [Reachability reachabilityForInternetConnection];</div><div class="line">    [self.intertReach startNotifier];</div><div class="line">    </div><div class="line">    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(100, 100, 300, 30)];</div><div class="line">    [self.view addSubview:label];</div><div class="line">    self.label = label;</div><div class="line">    </div><div class="line">    //获取当前的网络状态</div><div class="line">    NetworkStatus status = [self.intertReach currentReachabilityStatus];</div><div class="line">    [self judgeNetWorkStatus:status];</div></pre></td></tr></table></figure>
+<p>当网络发生改变时 会触发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> 当网络状态发生变换时 会触发这个方法</div><div class="line"></div><div class="line"> @param no 通知</div><div class="line"> */</div><div class="line">- (void)reachabilityChanged:(NSNotification *)no&#123;</div><div class="line">    Reachability* curReach = [no object];</div><div class="line">    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);</div><div class="line">    NetworkStatus status = [curReach currentReachabilityStatus];</div><div class="line">    [self judgeNetWorkStatus:status];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>还是很简单的 </p>
+<p>源代码 放在了</p>
+<p><a href="https://github.com/yangqian111/blog/tree/master/iOS网络区分2、3、4G" target="_blank" rel="external">https://github.com/yangqian111/blog/tree/master/iOS网络区分2、3、4G</a></p>
 
       
     </div>
@@ -373,7 +389,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/扯淡/" rel="tag">#扯淡</a>
+            <a href="/tags/iOS区分2、3、4G网络/" rel="tag">#iOS区分2、3、4G网络</a>
           
         </div>
       
@@ -382,17 +398,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/19/iOS制作圆形头像，带文字的圆形头像/" rel="next" title="iOS制作圆形头像，带文字的圆形头像">
-                <i class="fa fa-chevron-left"></i> iOS制作圆形头像，带文字的圆形头像
+              <a href="/2016/10/25/Mac使用gitbook创建电子书/" rel="next" title="Mac使用gitbook创建电子书">
+                <i class="fa fa-chevron-left"></i> Mac使用gitbook创建电子书
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/19/iOS图片浏览器-一/" rel="prev" title="iOS图片浏览器(一)">
-                iOS图片浏览器(一) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -418,8 +430,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/10/19/杂谈/"
-           data-title="杂谈" data-url="http://sheep.com/2016/10/19/杂谈/">
+      <div class="ds-thread" data-thread-key="2016/10/26/iOS网络监测区分2、3、4G/"
+           data-title="iOS网络监测区分2、3、4G" data-url="http://sheep.com/2016/10/26/iOS网络监测区分2、3、4G/">
       </div>
     
   </div>
@@ -510,7 +522,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#闲来无事-nbsp-来扯扯淡"><span class="nav-number">1.</span> <span class="nav-text">闲来无事 来扯扯淡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正经点"><span class="nav-number">2.</span> <span class="nav-text">正经点</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载Reachability"><span class="nav-number">1.</span> <span class="nav-text">下载Reachability</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改Reachability"><span class="nav-number">2.</span> <span class="nav-text">修改Reachability</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用Reachability"><span class="nav-number">3.</span> <span class="nav-text">使用Reachability</span></a></li></ol></div>
             
           </div>
         </section>
