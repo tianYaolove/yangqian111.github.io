@@ -259,6 +259,309 @@
             
               
                 
+                <a class="post-title-link" href="/2016/11/01/iOS-UITableView上下滑动控制底部按钮出现/" itemprop="url">
+                  iOS UITableView上下滑动控制底部按钮出现
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-01T16:01:51+08:00" content="2016-11-01">
+              2016-11-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS-基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS 基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/01/iOS-UITableView上下滑动控制底部按钮出现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/01/iOS-UITableView上下滑动控制底部按钮出现/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/11/01/iOS-UITableView上下滑动控制底部按钮出现/" class="leancloud_visitors" data-flag-title="iOS UITableView上下滑动控制底部按钮出现">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一个简单的小功能，忘记在哪个APP上看到过，就做来玩一玩  实现起来还是很简单的 </p>
+<p>先看一下效果</p>
+<p><img src="http://o8bxt3lx0.bkt.clouddn.com/UITableView%20Scroll.gif" alt="1"></p>
+<p>分析一下我们需要实现的：</p>
+<ul>
+<li>UITableView 向上滑动时隐藏底部的按钮</li>
+<li>UITableView 向下滑动时，底部按钮出现</li>
+<li>UITableView 到达底部时，底部按钮也出现</li>
+</ul>
+<p>创建工程啥的我都不讲了吧</p>
+<p>在viewDidload中加上view</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//加上这句  UIScrollView的Content就不会自动偏移64(导航栏和状态栏的高度)</div><div class="line">    self.automaticallyAdjustsScrollViewInsets = NO;</div><div class="line">    </div><div class="line">    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, SCREEN.width, SCREEN.height-64) style:UITableViewStylePlain];</div><div class="line">    tableView.delegate = self;</div><div class="line">    tableView.dataSource = self;</div><div class="line">    [self.view addSubview:tableView];</div><div class="line">    self.tableView = tableView;</div><div class="line">    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@&quot;cell&quot;];</div><div class="line">    </div><div class="line">    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];</div><div class="line">    btn.frame = CGRectMake(self.view.frame.size.width / 2 - 25, self.view.frame.size.height - 50, 50, 50);</div><div class="line">    [btn setBackgroundImage:[UIImage imageNamed:@&quot;comments&quot;] forState:UIControlStateNormal];</div><div class="line">    self.btn = btn;</div><div class="line">    [self.view addSubview:self.btn];</div></pre></td></tr></table></figure>
+<p>处理UIScrollView的滑动，一般都是在scrollViewDidScroll:方法中，这次也不例外</p>
+<p>我们在这里监听当前scrollview的滑动距离 滑动方向等</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#pragma mark - UITableView delegate</div><div class="line">-(void)scrollViewDidScroll:(UIScrollView *)scrollView&#123;</div><div class="line">    if (scrollView.contentOffset.y &gt; self.offsetY &amp;&amp; scrollView.contentOffset.y &gt; 0) &#123;//向上滑动</div><div class="line">        //按钮消失</div><div class="line">        [UIView transitionWithView:self.btn duration:0.1 options:UIViewAnimationOptionTransitionNone animations:^&#123;</div><div class="line">            self.btn.frame = CGRectMake(SCREEN.width / 2 - 25, SCREEN.height, 50, 50);</div><div class="line">        &#125; completion:NULL];</div><div class="line">    &#125;else if (scrollView.contentOffset.y &lt; self.offsetY )&#123;//向下滑动</div><div class="line">        //按钮出现</div><div class="line">        [UIView transitionWithView:self.btn duration:0.1 options:UIViewAnimationOptionTransitionNone animations:^&#123;</div><div class="line">            self.btn.frame = CGRectMake(SCREEN.width / 2 - 25, SCREEN.height - 50, 50, 50);</div><div class="line">        &#125; completion:NULL];</div><div class="line">    &#125;</div><div class="line">    self.offsetY = scrollView.contentOffset.y;//将当前位移变成缓存位移</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样一个  特别简单的小功能  就实现了 </p>
+<p>源码放在了：</p>
+<p><a href="https://github.com/yangqian111/blog/tree/master/iOS%20UITableView上下滑动控制底部按钮出现" target="_blank" rel="external">https://github.com/yangqian111/blog/tree/master/iOS%20UITableView上下滑动控制底部按钮出现</a></p>
+<h3 id="欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧"><a href="#欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧" class="headerlink" title="欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧"></a>欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧</h3><p><img src="http://o8bxt3lx0.bkt.clouddn.com/avatar_public.jpg" alt=""></p>
+<h3 id="文章也会同步到我的个人博客："><a href="#文章也会同步到我的个人博客：" class="headerlink" title="文章也会同步到我的个人博客："></a>文章也会同步到我的个人博客：</h3><p><a href="http://ppsheep.com" target="_blank" rel="external">http://ppsheep.com</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/10/31/iOS-UIScrollView上滑隐藏UINavigationBar/" itemprop="url">
+                  iOS UIScrollView上滑隐藏UINavigationBar
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-31T16:16:27+08:00" content="2016-10-31">
+              2016-10-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS-基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS 基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/31/iOS-UIScrollView上滑隐藏UINavigationBar/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/31/iOS-UIScrollView上滑隐藏UINavigationBar/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/10/31/iOS-UIScrollView上滑隐藏UINavigationBar/" class="leancloud_visitors" data-flag-title="iOS UIScrollView上滑隐藏UINavigationBar">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我们经常看到一些阅读类的应用，上滑UIScrollView的时候  UINavigationBar就隐藏了  虽然Apple给我们提供了隐藏NavigationBar的方法，但是有一个弊端  就是navigationbar不能随着UIScrollView的滑动速度来隐藏，并且设置bar逐渐隐藏，今天我们就来实现这样一个效果</p>
+<p>首先看一下效果</p>
+<p><img src="http://o8bxt3lx0.bkt.clouddn.com/ScrollView.gif" alt="1"></p>
+<p><strong>首先分析一下，随着滑动隐藏NavigationBar，肯定是在UIScrollView的delegate方法scrollViewDidScroll:做操作</strong></p>
+<h3 id="UINavigationBar-Category"><a href="#UINavigationBar-Category" class="headerlink" title="UINavigationBar Category"></a>UINavigationBar Category</h3><p>在UINavigationBar中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">@interface UINavigationBar (PPSNavigationBar)</div><div class="line">/**</div><div class="line"> 设置scrollview的透明度 随着滑动  透明度改变</div><div class="line"></div><div class="line"> @param alpha 透明度</div><div class="line"> */</div><div class="line">- (void)pps_setScrollViewAlpha:(CGFloat)alpha;</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line"> 设置Bar偏移</div><div class="line"></div><div class="line"> @param translationY 偏移量</div><div class="line"> */</div><div class="line">- (void)pps_setTranslationY:(CGFloat)translationY;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>.m</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">@implementation UINavigationBar (PPSNavigationBar)</div><div class="line"></div><div class="line">-(void)pps_setTranslationY:(CGFloat)translationY&#123;</div><div class="line">    self.transform = CGAffineTransformMakeTranslation(0, translationY);</div><div class="line">&#125;</div><div class="line"></div><div class="line">-(void)pps_setScrollViewAlpha:(CGFloat)alpha&#123;</div><div class="line">    [[self valueForKey:@&quot;_leftViews&quot;] enumerateObjectsUsingBlock:^(UIView *view, NSUInteger i, BOOL *stop) &#123;</div><div class="line">        view.alpha = alpha;</div><div class="line">    &#125;];</div><div class="line">    </div><div class="line">    [[self valueForKey:@&quot;_rightViews&quot;] enumerateObjectsUsingBlock:^(UIView *view, NSUInteger i, BOOL *stop) &#123;</div><div class="line">        view.alpha = alpha;</div><div class="line">    &#125;];</div><div class="line">    </div><div class="line">    UIView *titleView = [self valueForKey:@&quot;_titleView&quot;];</div><div class="line">    titleView.alpha = alpha;</div><div class="line">    </div><div class="line">    [[self subviews] enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) &#123;</div><div class="line">        if ([obj isKindOfClass:NSClassFromString(@&quot;UINavigationItemView&quot;)]) &#123;</div><div class="line">            obj.alpha = alpha;</div><div class="line">            *stop = YES;</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>实现起来很简单   </p>
+<p>在NavigationBar中 </p>
+<ul>
+<li>_leftViews</li>
+<li>_rightViews</li>
+<li>_titleView</li>
+<li>UINavigationItemView </li>
+</ul>
+<p>这几个属性都是UINavigationBar的属性，如果不知道这几个属性  是可以通过runtime得到这几个属性的 </p>
+<p>具体的实现方法参考我的另一篇文章：</p>
+<p><a href="http://ppsheep.com/2016/10/31/iOS-RunTime解析/" target="_blank" rel="external">http://ppsheep.com/2016/10/31/iOS-RunTime解析/</a></p>
+<p>通过几个属性名我们就能知道 代表什么</p>
+<p>然后在我们的viewcontroller中  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">-(void)scrollViewDidScroll:(UIScrollView *)scrollView&#123;</div><div class="line">	//这里加上64是为了得到准确的scrollview的偏移量  当然你也可以在下面的判断中计算</div><div class="line">    CGFloat offsetY = scrollView.contentOffset.y+64;</div><div class="line">    if (offsetY &gt; 0) &#123;</div><div class="line">        if (offsetY &gt;= 44) &#123;</div><div class="line">            [self setNavigationBarTransformProgress:1];</div><div class="line">        &#125; else &#123;</div><div class="line">            [self setNavigationBarTransformProgress:(offsetY/44)];</div><div class="line">        &#125;</div><div class="line">    &#125; else &#123;</div><div class="line">        [self setNavigationBarTransformProgress:0];</div><div class="line">        self.navigationController.navigationBar.backIndicatorImage = [UIImage new];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)setNavigationBarTransformProgress:(CGFloat)progress</div><div class="line">&#123;</div><div class="line">    [self.navigationController.navigationBar pps_setTranslationY:(-44 * progress)];</div><div class="line">    [self.navigationController.navigationBar pps_setScrollViewAlpha:(1-progress)];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现起来 还是很简单的</p>
+<p>源工程：</p>
+<p><a href="https://github.com/yangqian111/blog/tree/master/iOS%20UIScrollView上滑隐藏UINavigationBar" target="_blank" rel="external">https://github.com/yangqian111/blog/tree/master/iOS%20UIScrollView上滑隐藏UINavigationBar</a></p>
+<h3 id="欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧"><a href="#欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧" class="headerlink" title="欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧"></a>欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧</h3><p><img src="http://o8bxt3lx0.bkt.clouddn.com/avatar_public.jpg" alt=""></p>
+<h3 id="文章也会同步到我的个人博客："><a href="#文章也会同步到我的个人博客：" class="headerlink" title="文章也会同步到我的个人博客："></a>文章也会同步到我的个人博客：</h3><p><a href="http://ppsheep.com" target="_blank" rel="external">http://ppsheep.com</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/31/iOS-RunTime解析/" itemprop="url">
                   iOS RunTime解析
                 </a>
@@ -1560,308 +1863,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/19/iOS图片浏览器-一/" itemprop="url">
-                  iOS图片浏览器(一)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-19T19:25:21+08:00" content="2016-10-19">
-              2016-10-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS组件/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS组件</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/19/iOS图片浏览器-一/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/19/iOS图片浏览器-一/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/19/iOS图片浏览器-一/" class="leancloud_visitors" data-flag-title="iOS图片浏览器(一)">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p> 之前有一个项目中用到了类似于微信的图片查看器，也看了网上很多开源的 总感觉不是自己想要的 这里就自己动手写一个  打算跟微信写的差不多吧  用起来也是跟微信很像</p>
-<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p>先看一下初步效果  这是还没实现完的 一部分<br><img src="http://o8bxt3lx0.bkt.clouddn.com/brower.gif" alt="photoBrower"></p>
-<p><em>我们先来分析一下图片浏览器 可以多张浏览  可以下载图片观看   可以手势缩放</em></p>
-<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>综合以上几点我们可以得出以下几点：</p>
-<ul>
-<li>图片需要下载，这里我们就用SDWebImage</li>
-<li>需要多张浏览滑动，肯定是用一个UIScrollView包裹起来</li>
-<li>每张图片需要能够适应手势缩放，所以每张图片也是用一个UIScrollView包起来</li>
-<li>还要考虑一个 是查看本地图片还是查看网络图片，如果一张图片既有本地图片也有网络地址，那么肯定是优先查看本地的图片</li>
-</ul>
-<p>综合以上几点，我们就可以开始了：</p>
-<h3 id="创建photo实例"><a href="#创建photo实例" class="headerlink" title="创建photo实例"></a>创建photo实例</h3><p>首先创建一个Photo实例  用来存储照片的一些属性</p>
-<p>.h文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">#import &lt;UIKit/UIKit.h&gt;</div><div class="line"></div><div class="line">@interface Photo : UIImageView</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line"> *  缩略图 imageView</div><div class="line"> */</div><div class="line">@property (nonatomic, strong) UIImageView *thumbnail;</div><div class="line"></div><div class="line">/**</div><div class="line"> 高清图</div><div class="line"> 如果存在  则在显示的时候优先显示设置的本地大图</div><div class="line"> */</div><div class="line">@property (nonatomic, strong) UIImage *fullImage;</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line"> *  大图URL   存在本地大图时  还是优先显示本地大图</div><div class="line"> */</div><div class="line">@property (nonatomic,strong) NSString *fullImgUrl;</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line"> 创建图片实例</div><div class="line"></div><div class="line"> @param thumbnail  缩略图View 用于加载在下载图片的时候</div><div class="line"> @param fullImage  高清图 image</div><div class="line"> @param fullImgUrl 高清图地址</div><div class="line"></div><div class="line"> @return photo实例</div><div class="line"> */</div><div class="line">- (instancetype)initWithThumbnail:(UIImageView *)thumbnail fullImage:(UIImage *)fullImage fullImgUrl:(NSString *)fullImgUrl;</div><div class="line"></div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
-<p>.m文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">@implementation Photo</div><div class="line"></div><div class="line">/**</div><div class="line"> 将图片的一些实例</div><div class="line"></div><div class="line"> @param thumbnail  含缩略图的view</div><div class="line"> @param fullImage  高清大图</div><div class="line"> @param fullImgUrl 高清大图网络地址</div><div class="line"></div><div class="line"> @return 照片model实例</div><div class="line"> */</div><div class="line">- (instancetype)initWithThumbnail:(UIImageView *)thumbnail fullImage:(UIImage *)fullImage fullImgUrl:(NSString *)fullImgUrl&#123;</div><div class="line">    self = [super init];</div><div class="line">    if (self) &#123;</div><div class="line">        //设置照片填充模式 可点击</div><div class="line">        self.clipsToBounds = YES;</div><div class="line">        self.userInteractionEnabled  = YES;</div><div class="line">        self.contentMode = UIViewContentModeScaleAspectFill;</div><div class="line">        _thumbnail = thumbnail;</div><div class="line">        _fullImage = fullImage;</div><div class="line">        _fullImgUrl = fullImgUrl;</div><div class="line">    &#125;</div><div class="line">    return self;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
-<h3 id="创建Brower"><a href="#创建Brower" class="headerlink" title="创建Brower"></a>创建Brower</h3><p>照片实例创建好   接下来 需要做的  就是展示的view</p>
-<p>查看照片的时候  我们都知道 是照片view整个覆盖上屏幕  那么这个view肯定是加在最上层的  怎么加在最上层呢  </p>
-<p><strong>直接加在第一层Window上  即 [UIApplication sharedApplication].keyWindow</strong></p>
-<p>在PhotoBrower中 我只暴露了一个方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@interface PhotoBrower : UIView</div><div class="line"></div><div class="line">/**</div><div class="line"> 显示大图</div><div class="line"></div><div class="line"> @param photos 照片数组 装的Photo</div><div class="line"> @param index  当前的照片是第几张</div><div class="line"> */</div><div class="line">+ (void)showWithPhotos:(NSArray *)photos index:(NSInteger)index;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
-<p>在Brower的实现中</p>
-<p>首先需要创建黑色的背景</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> 创建黑色的背景</div><div class="line"> */</div><div class="line">- (void)createBlackView&#123;</div><div class="line">    UIView *blackView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];</div><div class="line">    blackView.backgroundColor = [UIColor blackColor];</div><div class="line">    [self addSubview:blackView];</div><div class="line">    self.blackView = blackView;</div><div class="line">    self.blackView.alpha = 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后创建外部最大的滑动的UIScrollView</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> 创建外部的  滑动的scrollview</div><div class="line"> */</div><div class="line">- (void)createOuterScrollView&#123;</div><div class="line">    UIScrollView *outScrollView = [[UIScrollView alloc] init];</div><div class="line">    outScrollView.backgroundColor = [UIColor clearColor];</div><div class="line">    outScrollView.delegate = self;//这个地方的代理主要是做外部Scroll滑动的时候 处理</div><div class="line">    outScrollView.tag = OutScrollVIewTag;//用于判断处理点击事件和缩放事件时判断是否是外部的UIScrollView</div><div class="line">    outScrollView.pagingEnabled = YES;</div><div class="line">    outScrollView.bounces = YES;</div><div class="line">    outScrollView.showsHorizontalScrollIndicator = NO;</div><div class="line">    outScrollView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);</div><div class="line">    [self addSubview:outScrollView];</div><div class="line">    self.outScrollView = outScrollView;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>实现UIScrollView的拖动代理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView&#123;</div><div class="line">    int currentIndex = scrollView.contentOffset.x/SCREEN_WIDTH;</div><div class="line">    if (self.currentIndex!=currentIndex &amp;&amp; scrollView.tag==OutScrollVIewTag) &#123;</div><div class="line">        self.currentIndex = currentIndex;</div><div class="line">        for (UIView *view in scrollView.subviews) &#123;</div><div class="line">            if ([view isKindOfClass:[UIScrollView class]]) &#123;</div><div class="line">                UIScrollView *scrollView = (UIScrollView *)view;</div><div class="line">                scrollView.zoomScale = 1.0;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在做显示动画的时候  需要转换一下view  然后做一个动画</p>
-<p>具体实现 我们还是看代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#pragma mark 获取原始frame 为了做动画</div><div class="line">-(void)setupOriginRects&#123;</div><div class="line">    for (Photo *photo in self.photos) &#123;</div><div class="line">        UIImageView *sourceImageView = photo.thumbnail;</div><div class="line">        CGRect sourceF = [YQKeyWindow convertRect:sourceImageView.frame fromView:sourceImageView.superview];</div><div class="line">        [self.originRects addObject:[NSValue valueWithCGRect:sourceF]];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>讲数组中的view的原始frame获取出来 在显示时做一个动画</p>
-<p>接下来 就是创建每个单独的photo了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> 创建每一张照片 每一张照片都是一个scrollview</div><div class="line"> scrollview可缩放</div><div class="line"> */</div><div class="line">-(void)setupphotoScrollViews&#123;</div><div class="line">    for (int i=0; i&lt;self.photos.count; i++) &#123;</div><div class="line">        UIScrollView *photoScrollView = [[UIScrollView alloc] init];</div><div class="line">        photoScrollView.backgroundColor = [UIColor clearColor];</div><div class="line">        photoScrollView.tag = i;</div><div class="line">        photoScrollView.frame = CGRectMake(SCREEN_WIDTH*i, 0, SCREEN_WIDTH, SCREEN_HEIGHT);</div><div class="line">        photoScrollView.delegate = self;</div><div class="line">        photoScrollView.maximumZoomScale=2.0;</div><div class="line">        photoScrollView.minimumZoomScale=1;</div><div class="line">        [self.outScrollView addSubview:photoScrollView];</div><div class="line">        </div><div class="line">        Photo *photo = self.photos[i];</div><div class="line">        UITapGestureRecognizer *photoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(photoTap:)];</div><div class="line">        UITapGestureRecognizer *zonmTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zonmTap:)];</div><div class="line">        zonmTap.numberOfTapsRequired = 2;</div><div class="line">        [photoScrollView addGestureRecognizer:photoTap];</div><div class="line">        [photoScrollView addGestureRecognizer:zonmTap];</div><div class="line">        [photoTap requireGestureRecognizerToFail:zonmTap];</div><div class="line">        </div><div class="line">        [photoScrollView addSubview:photo];</div><div class="line">        //有本地高清大图 直接大图显示出来就不需要再次访问网络</div><div class="line">        if (photo.fullImage) &#123;</div><div class="line">            photo.image = photo.fullImage;</div><div class="line">            photo.frame = [self.originRects[i] CGRectValue];</div><div class="line">            [UIView animateWithDuration:0.3 animations:^&#123;</div><div class="line">                </div><div class="line">                self.blackView.alpha = 1.0;</div><div class="line">                </div><div class="line">                CGFloat ratio = (double)photo.image.size.height/(double)photo.image.size.width;</div><div class="line">                </div><div class="line">                CGFloat bigW = SCREEN_WIDTH;</div><div class="line">                CGFloat bigH = SCREEN_WIDTH*ratio;</div><div class="line">                </div><div class="line">                photo.bounds = CGRectMake(0, 0, bigW, bigH);</div><div class="line">                photo.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);</div><div class="line">            &#125;];</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">        NSURL *fullImgUrl = [NSURL URLWithString:photo.fullImgUrl];</div><div class="line">        [photo sd_setImageWithURL:fullImgUrl placeholderImage:nil options:SDWebImageRetryFailed | SDWebImageLowPriority progress:^(NSInteger receivedSize, NSInteger expectedSize) &#123;</div><div class="line">            //开始下载  这里后面会做一些效果 比如下载的进度条  一个load</div><div class="line">        &#125; completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) &#123;</div><div class="line">            if (image!=nil) &#123;</div><div class="line">                photo.frame = [self.originRects[i] CGRectValue];</div><div class="line">                //如果是网上下载下来的图片  那么改变一下photo的位置  后面做动画 会和已有缓存的图片显示效果不一样</div><div class="line">                if (cacheType==SDImageCacheTypeNone) &#123;</div><div class="line">                    photo.frame = CGRectMake(0, 0, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);</div><div class="line">                    photo.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);</div><div class="line">                &#125;</div><div class="line">                [UIView animateWithDuration:0.3 animations:^&#123;</div><div class="line">                    self.blackView.alpha = 1.0;</div><div class="line">                    CGFloat ratio = (double)photo.image.size.height/(double)photo.image.size.width;</div><div class="line">                    CGFloat bigW = SCREEN_WIDTH;</div><div class="line">                    CGFloat bigH = SCREEN_WIDTH*ratio;</div><div class="line">                    photo.bounds = CGRectMake(0, 0, bigW, bigH);</div><div class="line">                    photo.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);</div><div class="line">                &#125;];</div><div class="line">            &#125;else&#123;</div><div class="line">               //下载错误 提示一个 错误需要</div><div class="line">            &#125;</div><div class="line">        &#125;];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>第一部分的主要代码 就在这里了  后面还会继续完善  加上下载loading   加上长按图片保存等操作</p>
-<p>项目的源码放在了</p>
-<p><a href="https://github.com/yangqian111/blog/tree/master/iOS图片查看器" target="_blank" rel="external">https://github.com/yangqian111/blog/tree/master/iOS图片查看器</a></p>
-<h3 id="欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧"><a href="#欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧" class="headerlink" title="欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧"></a>欢迎大家关注我的公众号，主要是分享一些我在项目中遇到问题的解决方法，还有一些实用技巧</h3><p><img src="http://o8bxt3lx0.bkt.clouddn.com/avatar_public.jpg" alt=""></p>
-<h3 id="文章也会同步到我的个人博客："><a href="#文章也会同步到我的个人博客：" class="headerlink" title="文章也会同步到我的个人博客："></a>文章也会同步到我的个人博客：</h3><p><a href="http://ppsheep.com" target="_blank" rel="external">http://ppsheep.com</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/19/杂谈/" itemprop="url">
-                  杂谈
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-19T15:14:51+08:00" content="2016-10-19">
-              2016-10-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/扯淡/" itemprop="url" rel="index">
-                    <span itemprop="name">扯淡</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/19/杂谈/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/19/杂谈/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/19/杂谈/" class="leancloud_visitors" data-flag-title="杂谈">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="闲来无事-nbsp-来扯扯淡"><a href="#闲来无事-nbsp-来扯扯淡" class="headerlink" title="闲来无事&nbsp;来扯扯淡"></a>闲来无事&nbsp;来扯扯淡</h3><p>最近都有意无意听说 互联网这个行业 不行了  找不到工作了  死了一片  又一片</p>
-<p>我就在想  这关我什么事  现目前 我不创业  不投资   只要把 自己  手头上的事情做好   不就行了</p>
-<p>其他的事情  自然有其他的人担心   我干嘛要去操这个心呢  </p>
-<p>反过来又想想   不对啊  这个 好像跟我还是有关的 公司倒了  不是就没工作了 </p>
-<p>没工作  再找呗   大不了 去搬砖</p>
-<h3 id="正经点"><a href="#正经点" class="headerlink" title="正经点"></a>正经点</h3><p><em>不过说现在这个行业不景气  倒是确实的，一波接着一波的公司倒闭</em></p>
-<p><em>但是我在想哈，也有很多企业在这一两年成长起来，壮大，滴滴就是一个很好的例子，所以呢，自己产品做得好，哪会管它什么环境，都是你去影响环境了  就轮不上环境来制约你了</em></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1907,7 +1908,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1915,7 +1916,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1924,7 +1925,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
